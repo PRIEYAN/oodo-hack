@@ -1,6 +1,10 @@
 import 'dotenv/config';
+import dns from 'node:dns';
 import mongoose from 'mongoose';
 import bcrypt from 'bcryptjs';
+
+// Match server.js: force a resolver that answers the SRV lookups mongodb+srv:// needs.
+dns.setServers(['8.8.8.8', '1.1.1.1']);
 import User from './models/User.js';
 import Vehicle from './models/Vehicle.js';
 import Driver from './models/Driver.js';
