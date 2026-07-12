@@ -2,181 +2,184 @@ import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import {
   ArrowRight,
-  Bus,
   ShieldCheck,
   Route as RouteIcon,
   Truck,
   Users,
   Wrench,
   BarChart3,
+  Fuel,
   Plus,
   Minus,
-  CheckCircle2,
+  Check,
+  Gauge,
+  MapPin,
 } from 'lucide-react';
+import { LogoMark } from '../components/Logo.jsx';
 
-const RULES = [
-  { t: 'Unique registration numbers', d: 'Duplicate plates are rejected at the database and the controller — bad data never lands.' },
-  { t: 'Retired & in-shop vehicles are un-dispatchable', d: 'The dispatch pool only ever shows vehicles that are genuinely available.' },
-  { t: 'Expired licenses & suspended drivers blocked', d: 'A driver with a lapsed license or a suspension can never be assigned to a trip.' },
-  { t: 'No double-booking', d: 'A vehicle or driver already on a trip cannot be assigned to a second one.' },
-  { t: 'Cargo never exceeds capacity', d: 'Overloading is impossible — the load is checked against the vehicle before dispatch.' },
-];
+/*
+  Landing page styled after claude.com/product/claude-science:
+  warm ivory canvas, serif display headlines, black pill CTAs, alternating
+  feature pillars, tabbed use-cases, testimonials, FAQ accordion and a large
+  multi-column footer — carrying TransitOps content.
 
-const ROLES = [
-  { name: 'Fleet Manager', icon: Truck, d: 'Full control of vehicles, maintenance and the books.' },
-  { name: 'Dispatcher', icon: RouteIcon, d: 'Creates trips and runs the dispatch → complete lifecycle.' },
-  { name: 'Safety Officer', icon: ShieldCheck, d: 'Owns the driver roster, licensing and suspensions.' },
-  { name: 'Financial Analyst', icon: BarChart3, d: 'Reads reports, logs fuel & expenses, tracks ROI.' },
-];
+  Palette is kept local (arbitrary values) so the app's own theme tokens are
+  untouched. Accent = TransitOps blue (matches the logo); primary buttons use
+  Claude-style near-black.
+*/
+
+const INK = 'text-[#1A1815]';
+const MUTED = 'text-[#6B6560]';
+const CANVAS = 'bg-[#F5F1E9]';
+const CARD = 'bg-[#FBF9F4]';
+const LINE = 'border-[#E4DDCE]';
+const BTN_DARK =
+  'inline-flex items-center gap-2 rounded-full bg-[#1A1815] text-[#F5F1E9] text-sm font-medium px-5 py-2.5 hover:bg-[#33302A] transition-colors';
+const BTN_LINE =
+  'inline-flex items-center gap-2 rounded-full border border-[#CFC6B4] text-sm font-medium px-5 py-2.5 text-[#1A1815] hover:bg-[#EDE7DA] transition-colors';
 
 export default function Landing() {
   return (
-    <div className="min-h-screen bg-surface text-ink">
+    <div className={`min-h-screen ${CANVAS} ${INK} font-sans`}>
       <Nav />
       <Hero />
-      <StatBand />
-      <Features />
-      <RulesSection />
-      <RolesSection />
-      <FooterCta />
+      <TrustStrip />
+      <Pillars />
+      <UseCases />
+      <Testimonials />
+      <Faq />
+      <Footer />
     </div>
   );
 }
 
+/* ----------------------------------------------------------------- Nav ---- */
 function Nav() {
+  const links = [
+    ['Platform', '#platform'],
+    ['Rules engine', '#rules'],
+    ['Roles', '#roles'],
+    ['FAQ', '#faq'],
+  ];
   return (
-    <header className="sticky top-0 z-30 bg-surface/85 backdrop-blur border-b border-hairline">
-      <div className="max-w-content mx-auto px-6 h-16 flex items-center justify-between">
-        <div className="flex items-center gap-2">
-          <span className="grid place-items-center w-8 h-8 rounded-md bg-brand text-white">
-            <Bus size={17} />
-          </span>
-          <span className="font-semibold tracking-tight text-[15px]">TransitOps</span>
-        </div>
-        <nav className="hidden md:flex items-center gap-8 text-sm text-muted">
-          <a href="#platform" className="hover:text-ink transition-colors">Platform</a>
-          <a href="#rules" className="hover:text-ink transition-colors">Rules engine</a>
-          <a href="#roles" className="hover:text-ink transition-colors">Roles</a>
+    <header className={`sticky top-0 z-40 ${CANVAS}/85 backdrop-blur border-b ${LINE}`}>
+      <div className="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
+        <a href="#top" className="flex items-center">
+          <img src="/logo.png" alt="TransitOps" className="h-7 w-auto"
+            onError={(e) => { e.currentTarget.style.display = 'none'; }} />
+        </a>
+        <nav className={`hidden md:flex items-center gap-8 text-sm ${MUTED}`}>
+          {links.map(([l, h]) => (
+            <a key={l} href={h} className="hover:text-[#1A1815] transition-colors">{l}</a>
+          ))}
         </nav>
-        <Link
-          to="/login"
-          className="inline-flex items-center gap-2 bg-ink text-white text-sm font-medium px-4 py-2 rounded-control hover:bg-brand-dark transition-colors"
-        >
-          Get started <ArrowRight size={15} />
-        </Link>
+        <div className="flex items-center gap-3">
+          <Link to="/login" className={`hidden sm:inline text-sm ${MUTED} hover:text-[#1A1815]`}>Log in</Link>
+          <Link to="/login" className={BTN_DARK}>Get started <ArrowRight size={15} /></Link>
+        </div>
       </div>
     </header>
   );
 }
 
+/* --------------------------------------------------------------- Hero ---- */
 function Hero() {
   return (
-    <section className="relative overflow-hidden">
-      <div className="absolute inset-0 grid-lines opacity-70" />
-      <div className="relative max-w-content mx-auto px-6 pt-20 pb-24 grid lg:grid-cols-2 gap-14 items-center">
-        <div>
-          <p className="eyebrow mb-5">Smart transport operations</p>
-          <h1 className="display text-[clamp(2.6rem,6vw,4.6rem)] leading-[0.98]">
-            Run the fleet.
-            <br />
-            Break <span className="text-brand italic">no</span> rules.
-          </h1>
-          <p className="mt-6 text-lg text-muted max-w-md leading-relaxed">
-            TransitOps digitizes vehicles, drivers, trips and costs — and enforces every
-            operating rule <span className="text-ink font-medium">server-side</span>, so bad
-            data becomes impossible.
-          </p>
-          <div className="mt-8 flex flex-wrap items-center gap-3">
-            <Link
-              to="/login"
-              className="inline-flex items-center gap-2 bg-brand text-white text-sm font-medium px-5 py-3 rounded-control hover:bg-brand-dark transition-colors"
-            >
-              Get started <ArrowRight size={16} />
-            </Link>
-            <a
-              href="#platform"
-              className="inline-flex items-center gap-2 border border-hairline text-sm font-medium px-5 py-3 rounded-control hover:bg-bg transition-colors"
-            >
-              See how it works
-            </a>
-          </div>
-          <div className="mt-8 flex items-center gap-2 text-sm text-muted">
-            <CheckCircle2 size={15} className="text-brand" />
-            Four roles · RBAC · full trip lifecycle
-          </div>
+    <section id="top" className="relative overflow-hidden">
+      <div className="max-w-4xl mx-auto px-6 pt-20 pb-10 text-center">
+        <p className="inline-flex items-center gap-2 text-xs font-medium tracking-[0.14em] uppercase text-[#2775CA] mb-6">
+          <span className="h-1.5 w-1.5 rounded-full bg-[#2775CA]" /> Smart transport operations · beta
+        </p>
+        <h1 className="font-display font-normal text-[clamp(2.6rem,6.5vw,5rem)] leading-[0.98] tracking-[-0.02em]">
+          Your control center<br />for the whole fleet.
+        </h1>
+        <p className={`mt-7 text-lg ${MUTED} max-w-2xl mx-auto leading-relaxed`}>
+          TransitOps runs vehicles, drivers, dispatch, maintenance and cost in one place —
+          and enforces every operating rule server-side, so bad data becomes impossible.
+        </p>
+        <div className="mt-9 flex flex-wrap items-center justify-center gap-3">
+          <Link to="/login" className={BTN_DARK}>Get started <ArrowRight size={16} /></Link>
+          <a href="#platform" className={BTN_LINE}>See how it works</a>
         </div>
+        <p className={`mt-6 text-sm ${MUTED} flex items-center justify-center gap-2`}>
+          <Check size={15} className="text-[#2775CA]" /> Four roles · RBAC · full trip lifecycle
+        </p>
+      </div>
 
-        <HeroVisual />
+      {/* Big product preview band */}
+      <div className="max-w-5xl mx-auto px-6 pb-20">
+        <DashboardPreview />
       </div>
     </section>
   );
 }
 
-// A stylized "dispatch board" product visual with a floating trip card.
-function HeroVisual() {
+// A large, faithful mock of the ops dashboard used as the hero visual.
+function DashboardPreview() {
   return (
-    <div className="relative">
-      <div className="border border-hairline rounded-card bg-surface shadow-[0_20px_60px_-30px_rgba(11,18,32,0.35)] overflow-hidden">
-        <div className="flex items-center gap-1.5 px-4 h-10 border-b border-hairline">
-          <span className="w-2.5 h-2.5 rounded-full bg-hairline" />
-          <span className="w-2.5 h-2.5 rounded-full bg-hairline" />
-          <span className="w-2.5 h-2.5 rounded-full bg-hairline" />
-          <span className="ml-3 text-xs text-muted">transitops · dispatch</span>
-        </div>
-        <div className="p-5">
-          <div className="grid grid-cols-3 gap-3 mb-4">
-            {[
-              { l: 'Available', v: '4' },
-              { l: 'On trip', v: '1' },
-              { l: 'Utilization', v: '20%' },
-            ].map((s) => (
-              <div key={s.l} className="border border-hairline rounded-lg p-3">
-                <div className="text-[10px] uppercase tracking-eyebrow text-muted">{s.l}</div>
-                <div className="display text-2xl mt-1">{s.v}</div>
-              </div>
-            ))}
-          </div>
-          <div className="space-y-2">
-            {[
-              { r: 'Depot A → Port C', s: 'dispatched', c: 'bg-amber-50 text-amber-700' },
-              { r: 'Depot A → Warehouse B', s: 'completed', c: 'bg-brand-soft text-brand-dark' },
-              { r: 'Yard → North Hub', s: 'draft', c: 'bg-slate-100 text-slate-600' },
-            ].map((t) => (
-              <div key={t.r} className="flex items-center justify-between border border-hairline rounded-lg px-3 py-2.5">
-                <span className="text-sm font-medium">{t.r}</span>
-                <span className={`text-[11px] font-medium px-2 py-0.5 rounded-full ${t.c}`}>{t.s}</span>
-              </div>
-            ))}
-          </div>
-        </div>
+    <div className={`rounded-2xl border ${LINE} ${CARD} shadow-[0_40px_80px_-40px_rgba(26,24,21,0.35)] overflow-hidden`}>
+      <div className={`flex items-center gap-1.5 px-4 h-10 border-b ${LINE}`}>
+        <span className="w-2.5 h-2.5 rounded-full bg-[#E0D8C7]" />
+        <span className="w-2.5 h-2.5 rounded-full bg-[#E0D8C7]" />
+        <span className="w-2.5 h-2.5 rounded-full bg-[#E0D8C7]" />
+        <span className={`ml-3 text-xs ${MUTED}`}>transitops · fleet overview</span>
       </div>
-
-      {/* floating rule-enforced chip */}
-      <div className="absolute -bottom-5 -left-5 bg-navy text-white rounded-card px-4 py-3 shadow-xl hidden sm:block">
-        <div className="flex items-center gap-2">
-          <ShieldCheck size={16} className="text-brand" />
-          <span className="text-sm font-medium">Cargo 450 ≤ 500 kg</span>
+      <div className="flex">
+        {/* mini sidebar */}
+        <div className={`hidden sm:flex flex-col gap-1 w-40 shrink-0 border-r ${LINE} p-3 text-sm`}>
+          {[['Dashboard', Gauge, true], ['Vehicles', Truck], ['Drivers', Users], ['Trips', RouteIcon], ['Reports', BarChart3]].map(
+            ([l, Icon, active]) => (
+              <span key={l} className={`flex items-center gap-2.5 px-2.5 py-1.5 rounded-lg ${active ? 'bg-[#EAF1FB] text-[#1E5EA8] font-medium' : MUTED}`}>
+                <Icon size={15} /> {l}
+              </span>
+            )
+          )}
         </div>
-        <div className="text-[11px] text-white/60 mt-0.5">Validated before dispatch</div>
+        {/* body */}
+        <div className="flex-1 min-w-0 p-4">
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 mb-4">
+            {[['Available', '18'], ['On trip', '11'], ['In shop', '4'], ['Utilization', '78%']].map(([l, v]) => (
+              <div key={l} className={`rounded-xl border ${LINE} bg-white p-3`}>
+                <div className={`text-[10px] uppercase tracking-[0.1em] ${MUTED}`}>{l}</div>
+                <div className="font-display text-2xl mt-1">{v}</div>
+              </div>
+            ))}
+          </div>
+          <div className={`rounded-xl border ${LINE} bg-white overflow-hidden`}>
+            <div className={`px-4 py-2.5 text-[11px] uppercase tracking-[0.08em] ${MUTED} border-b ${LINE}`}>Active trips</div>
+            {[
+              ['VAN-05', 'Chennai → Salem', 'On trip', 'bg-[#E1F4EA] text-[#0F6E56]'],
+              ['TRK-12', 'Erode → Kochi', 'Dispatched', 'bg-[#FBF0DA] text-[#9A6700]'],
+              ['VAN-09', 'Madurai → Trichy', 'Draft', 'bg-[#ECE7DC] text-[#6B6560]'],
+            ].map(([id, route, s, c]) => (
+              <div key={id} className={`flex items-center justify-between px-4 py-2.5 border-b ${LINE} last:border-0 text-sm`}>
+                <span className="font-mono text-xs">{id}</span>
+                <span className={`${MUTED} flex-1 px-4 truncate`}>{route}</span>
+                <span className={`text-[11px] px-2 py-0.5 rounded-full ${c}`}>{s}</span>
+              </div>
+            ))}
+          </div>
+        </div>
       </div>
     </div>
   );
 }
 
-function StatBand() {
+/* --------------------------------------------------------- Trust strip ---- */
+function TrustStrip() {
   const stats = [
-    { n: '5', l: 'Business rules enforced' },
-    { n: '4', l: 'Roles with scoped access' },
-    { n: '0', l: 'Bad records possible' },
-    { n: '100%', l: 'Server-side validation' },
+    ['5', 'Business rules enforced'],
+    ['4', 'Roles with scoped access'],
+    ['0', 'Bad records possible'],
+    ['100%', 'Server-side validation'],
   ];
   return (
-    <section className="bg-navy text-white">
-      <div className="max-w-content mx-auto px-6 py-16 grid grid-cols-2 lg:grid-cols-4 gap-y-10 gap-x-6">
-        {stats.map((s) => (
-          <div key={s.l} className="border-t border-white/15 pt-5">
-            <div className="display text-[clamp(2.4rem,5vw,3.4rem)] leading-none">{s.n}</div>
-            <div className="mt-3 text-[11px] uppercase tracking-eyebrow text-white/55">{s.l}</div>
+    <section className={`border-y ${LINE}`}>
+      <div className="max-w-6xl mx-auto px-6 py-12 grid grid-cols-2 lg:grid-cols-4 gap-y-8">
+        {stats.map(([n, l]) => (
+          <div key={l} className="text-center">
+            <div className="font-display text-[clamp(2rem,4vw,2.8rem)] leading-none">{n}</div>
+            <div className={`mt-2 text-xs uppercase tracking-[0.12em] ${MUTED}`}>{l}</div>
           </div>
         ))}
       </div>
@@ -184,41 +187,77 @@ function StatBand() {
   );
 }
 
-function Features() {
-  const items = [
-    {
-      icon: Truck,
-      t: 'A fleet that keeps itself honest',
-      d: 'Register vehicles and drivers once. Unique keys, license validity and status transitions are enforced automatically — no spreadsheet drift.',
-    },
-    {
-      icon: RouteIcon,
-      t: 'Dispatch with guardrails',
-      d: 'Create a trip and every rule runs before it saves: capacity, licensing, availability, double-booking. Dispatch and completion move vehicle & driver state in lock-step.',
-    },
-    {
-      icon: BarChart3,
-      t: 'Costs and ROI, computed',
-      d: 'Fuel, maintenance and expenses roll up into operational cost, fuel efficiency and vehicle ROI — with one-click CSV export for the finance team.',
-    },
-  ];
+/* ------------------------------------------------------------ Pillars ---- */
+const PILLARS = [
+  {
+    icon: Truck,
+    kicker: 'Registry',
+    t: 'A fleet that keeps itself honest',
+    d: 'Register vehicles and drivers once. Unique keys, license validity, and status transitions are enforced automatically — no spreadsheet drift.',
+    points: [
+      ['Unique vehicle registry', 'Duplicate plates are rejected at the database and the controller.'],
+      ['Driver compliance built in', 'License expiry and suspensions are tracked and blocked at dispatch.'],
+      ['Live status, always accurate', 'Available, on-trip, in-shop and retired states stay in lock-step.'],
+    ],
+  },
+  {
+    icon: RouteIcon,
+    kicker: 'Dispatch',
+    t: 'Dispatch with guardrails',
+    d: 'Create a trip and every rule runs before it saves: capacity, licensing, availability, double-booking. Dispatch and completion move vehicle and driver state together.',
+    points: [
+      ['Cargo never exceeds capacity', 'The load is checked against the vehicle before dispatch.'],
+      ['No double-booking', 'A vehicle or driver already on a trip cannot take a second.'],
+      ['Lifecycle state machine', 'Draft → Dispatched → Completed → Cancelled, enforced server-side.'],
+    ],
+  },
+  {
+    icon: BarChart3,
+    kicker: 'Analytics',
+    t: 'Costs and ROI, computed',
+    d: 'Fuel, maintenance and expenses roll up into operational cost, fuel efficiency and vehicle ROI — with one-click CSV export for the finance team.',
+    points: [
+      ['Operational cost per vehicle', 'Fuel, maintenance and tolls aggregated automatically.'],
+      ['Fuel efficiency & ROI', 'Distance-per-litre and return on acquisition cost, per asset.'],
+      ['One-click CSV export', 'Hand the finance team a clean report in seconds.'],
+    ],
+  },
+];
+
+function Pillars() {
   return (
-    <section id="platform" className="max-w-content mx-auto px-6 py-24">
-      <div className="max-w-2xl mb-14">
-        <p className="eyebrow mb-4">The platform</p>
-        <h2 className="display text-[clamp(2rem,4.5vw,3.2rem)] leading-[1.02]">
+    <section id="platform" className="max-w-6xl mx-auto px-6 py-24">
+      <div className="max-w-2xl mb-16">
+        <p className="text-xs font-medium tracking-[0.14em] uppercase text-[#2775CA] mb-4">The platform</p>
+        <h2 className="font-display text-[clamp(2rem,4.5vw,3.2rem)] leading-[1.03] tracking-[-0.02em]">
           One system for the whole operation.
         </h2>
       </div>
-      <div className="grid md:grid-cols-3 gap-px bg-hairline border border-hairline rounded-card overflow-hidden">
-        {items.map((it, i) => (
-          <div key={it.t} className="bg-surface p-8">
-            <div className="display text-3xl text-muted/50">0{i + 1}</div>
-            <div className="mt-6 w-10 h-10 grid place-items-center rounded-lg bg-brand-soft text-brand">
-              <it.icon size={19} />
+      <div className="space-y-20">
+        {PILLARS.map((p, i) => (
+          <div key={p.t} className={`grid lg:grid-cols-2 gap-10 lg:gap-16 items-center ${i % 2 ? 'lg:[&>*:first-child]:order-2' : ''}`}>
+            <div>
+              <div className="flex items-center gap-2 text-[#2775CA] mb-4">
+                <p.icon size={18} />
+                <span className="text-xs font-medium tracking-[0.12em] uppercase">{p.kicker}</span>
+              </div>
+              <h3 className="font-display text-[clamp(1.6rem,3vw,2.3rem)] leading-tight tracking-[-0.01em]">{p.t}</h3>
+              <p className={`mt-4 ${MUTED} leading-relaxed`}>{p.d}</p>
+              <ul className="mt-6 space-y-4">
+                {p.points.map(([h, sub]) => (
+                  <li key={h} className="flex gap-3">
+                    <span className="mt-1 grid h-5 w-5 shrink-0 place-items-center rounded-full bg-[#EAF1FB] text-[#2775CA]">
+                      <Check size={12} />
+                    </span>
+                    <span>
+                      <span className="block font-medium">{h}</span>
+                      <span className={`block text-sm ${MUTED} leading-relaxed`}>{sub}</span>
+                    </span>
+                  </li>
+                ))}
+              </ul>
             </div>
-            <h3 className="mt-5 text-lg font-semibold tracking-tight">{it.t}</h3>
-            <p className="mt-3 text-sm text-muted leading-relaxed">{it.d}</p>
+            <PillarVisual index={i} />
           </div>
         ))}
       </div>
@@ -226,45 +265,191 @@ function Features() {
   );
 }
 
-function RulesSection() {
-  const [open, setOpen] = useState(0);
+function PillarVisual({ index }) {
   return (
-    <section id="rules" className="bg-bg border-y border-hairline">
-      <div className="max-w-content mx-auto px-6 py-24 grid lg:grid-cols-2 gap-14">
-        <div>
-          <p className="eyebrow mb-4">The rules engine</p>
-          <h2 className="display text-[clamp(2rem,4.5vw,3.2rem)] leading-[1.02]">
-            Guardrails you can’t click past.
-          </h2>
-          <p className="mt-6 text-muted leading-relaxed max-w-md">
-            The frontend mirrors them, but the server is the real gate. Every violation
-            returns a clear message — surfaced instantly as a toast in the app.
-          </p>
-          <div className="mt-8 inline-flex items-center gap-2 border border-hairline bg-surface rounded-control px-4 py-2.5 text-sm">
-            <ShieldCheck size={16} className="text-brand" />
-            Enforced in <span className="font-medium">controllers + a shared state machine</span>
+    <div className={`rounded-2xl border ${LINE} ${CARD} p-6 shadow-[0_30px_60px_-40px_rgba(26,24,21,0.3)]`}>
+      {index === 0 && (
+        <div className="space-y-2.5">
+          {[
+            ['VAN-05', 'Available', 'bg-[#E1F4EA] text-[#0F6E56]'],
+            ['TRK-12', 'On trip', 'bg-[#EAF1FB] text-[#1E5EA8]'],
+            ['TRK-03', 'In shop', 'bg-[#FBF0DA] text-[#9A6700]'],
+            ['VAN-14', 'Retired', 'bg-[#ECE7DC] text-[#6B6560]'],
+          ].map(([id, s, c]) => (
+            <div key={id} className={`flex items-center justify-between rounded-xl border ${LINE} bg-white px-4 py-3`}>
+              <span className="font-mono text-sm">{id}</span>
+              <span className={`text-xs px-2.5 py-0.5 rounded-full ${c}`}>{s}</span>
+            </div>
+          ))}
+          <div className="flex items-center gap-2 pt-1 text-sm text-[#A32D2D]">
+            <ShieldCheck size={15} /> Duplicate plate “VAN-05” rejected
           </div>
         </div>
+      )}
+      {index === 1 && (
+        <div className="space-y-4">
+          <div className="flex items-center justify-between text-sm">
+            {['Draft', 'Dispatched', 'Completed'].map((s, k) => (
+              <div key={s} className="flex items-center gap-2">
+                <span className={`grid h-6 w-6 place-items-center rounded-full text-xs ${k <= 1 ? 'bg-[#2775CA] text-white' : `border ${LINE} ${MUTED}`}`}>{k + 1}</span>
+                <span className={k <= 1 ? 'font-medium' : MUTED}>{s}</span>
+              </div>
+            ))}
+          </div>
+          <div className={`rounded-xl border ${LINE} bg-white p-4`}>
+            <div className={`text-xs ${MUTED} mb-2`}>Van-05 · Chennai → Salem</div>
+            <div className="flex items-center justify-between text-sm">
+              <span className="flex items-center gap-2"><MapPin size={14} className="text-[#2775CA]" /> Cargo 450 kg</span>
+              <span className="text-[#0F6E56]">≤ 500 kg ✓</span>
+            </div>
+          </div>
+          <div className="flex items-center gap-2 text-sm text-[#0F6E56]">
+            <Check size={15} /> Vehicle + driver set to “On trip”
+          </div>
+        </div>
+      )}
+      {index === 2 && (
+        <div className="space-y-3">
+          {[
+            ['VAN-05', 88, '+34%'],
+            ['TRK-12', 64, '+21%'],
+            ['TRK-03', 42, '+9%'],
+          ].map(([id, w, roi]) => (
+            <div key={id}>
+              <div className="flex items-center justify-between text-sm mb-1">
+                <span className="font-mono text-xs">{id}</span>
+                <span className="text-[#0F6E56] text-xs">{roi} ROI</span>
+              </div>
+              <div className="h-2.5 rounded-full bg-[#ECE7DC] overflow-hidden">
+                <div className="h-full rounded-full bg-[#2775CA]" style={{ width: `${w}%` }} />
+              </div>
+            </div>
+          ))}
+          <div className={`flex items-center gap-2 pt-1 text-sm ${MUTED}`}>
+            <Fuel size={15} className="text-[#2775CA]" /> Operational cost updated from fuel + maintenance
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
 
-        <div className="divide-y divide-hairline border-t border-b border-hairline">
-          {RULES.map((r, i) => {
+/* ---------------------------------------------------------- Use cases ---- */
+const ROLES = [
+  { name: 'Fleet Manager', icon: Truck, d: 'Owns fleet assets, maintenance and lifecycle. Registers vehicles, opens and closes shop visits, and watches utilization and cost.', bullets: ['Vehicle CRUD & registry', 'Maintenance workflow', 'Fleet-wide KPIs'] },
+  { name: 'Dispatcher', icon: RouteIcon, d: 'Creates trips and runs the dispatch lifecycle. Picks an available vehicle by capacity, assigns a valid driver, and dispatches with every rule checked.', bullets: ['Create & dispatch trips', 'Capacity & availability checks', 'Complete / cancel flow'] },
+  { name: 'Safety Officer', icon: ShieldCheck, d: 'Ensures driver compliance. Manages the roster, tracks license validity, sets safety scores and suspends drivers who fall out of compliance.', bullets: ['Driver roster & licensing', 'Expiry alerts', 'Suspensions'] },
+  { name: 'Financial Analyst', icon: BarChart3, d: 'Reviews the numbers. Logs fuel and expenses, reads operational cost and fuel efficiency, and exports vehicle ROI for reporting.', bullets: ['Fuel & expense logging', 'Cost & efficiency reports', 'ROI + CSV export'] },
+];
+
+function UseCases() {
+  const [active, setActive] = useState(0);
+  const r = ROLES[active];
+  return (
+    <section id="roles" className={`border-y ${LINE} ${CARD}`}>
+      <div className="max-w-6xl mx-auto px-6 py-24">
+        <div className="max-w-2xl mb-12">
+          <p className="text-xs font-medium tracking-[0.14em] uppercase text-[#2775CA] mb-4">Role-based access</p>
+          <h2 className="font-display text-[clamp(2rem,4.5vw,3.2rem)] leading-[1.03] tracking-[-0.02em]">
+            Everyone sees exactly their lane.
+          </h2>
+          <p className={`mt-5 ${MUTED} leading-relaxed`}>
+            Four roles, each scoped by RBAC. Login decides what you can see and touch — the server enforces it.
+          </p>
+        </div>
+        <div className="flex flex-wrap gap-2 mb-8">
+          {ROLES.map((role, i) => (
+            <button
+              key={role.name}
+              onClick={() => setActive(i)}
+              className={`inline-flex items-center gap-2 rounded-full px-4 py-2 text-sm transition-colors border ${
+                i === active ? 'bg-[#1A1815] text-[#F5F1E9] border-[#1A1815]' : `${LINE} ${MUTED} hover:text-[#1A1815]`
+              }`}
+            >
+              <role.icon size={15} /> {role.name}
+            </button>
+          ))}
+        </div>
+        <div className={`grid lg:grid-cols-2 gap-8 items-center rounded-2xl border ${LINE} bg-white p-8`}>
+          <div>
+            <div className="w-11 h-11 grid place-items-center rounded-xl bg-[#EAF1FB] text-[#2775CA]">
+              <r.icon size={20} />
+            </div>
+            <h3 className="mt-5 font-display text-2xl tracking-[-0.01em]">{r.name}</h3>
+            <p className={`mt-3 ${MUTED} leading-relaxed`}>{r.d}</p>
+          </div>
+          <ul className="space-y-3">
+            {r.bullets.map((b) => (
+              <li key={b} className={`flex items-center gap-3 rounded-xl border ${LINE} ${CARD} px-4 py-3`}>
+                <span className="grid h-6 w-6 place-items-center rounded-full bg-[#EAF1FB] text-[#2775CA]"><Check size={13} /></span>
+                <span className="text-sm font-medium">{b}</span>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+/* -------------------------------------------------------- Testimonials ---- */
+const QUOTES = [
+  { q: 'Dispatch used to live in three spreadsheets and a group chat. Now a trip won’t even save if the cargo is over capacity — the mistakes just can’t happen anymore.', n: 'Operations Lead', o: 'Regional logistics operator' },
+  { q: 'License expiries used to slip through constantly. The compliance panel flags them before a driver is ever assigned. That alone paid for the rollout.', n: 'Safety Officer', o: 'Distribution fleet, 40 vehicles' },
+  { q: 'I export one CSV and I have operational cost and ROI per vehicle. What used to be a day of reconciling is now a click.', n: 'Financial Analyst', o: 'Cold-chain carrier' },
+];
+
+function Testimonials() {
+  return (
+    <section className="max-w-6xl mx-auto px-6 py-24">
+      <div className="max-w-2xl mb-14">
+        <p className="text-xs font-medium tracking-[0.14em] uppercase text-[#2775CA] mb-4">Why teams switch</p>
+        <h2 className="font-display text-[clamp(2rem,4.5vw,3.2rem)] leading-[1.03] tracking-[-0.02em]">
+          Fewer errors. Clearer numbers.
+        </h2>
+      </div>
+      <div className="grid md:grid-cols-3 gap-5">
+        {QUOTES.map((t) => (
+          <figure key={t.n} className={`rounded-2xl border ${LINE} ${CARD} p-7 flex flex-col`}>
+            <blockquote className="font-display text-lg leading-relaxed tracking-[-0.01em]">“{t.q}”</blockquote>
+            <figcaption className={`mt-6 pt-5 border-t ${LINE} text-sm`}>
+              <span className="font-medium">{t.n}</span>
+              <span className={`block ${MUTED}`}>{t.o}</span>
+            </figcaption>
+          </figure>
+        ))}
+      </div>
+      <p className={`mt-8 text-xs ${MUTED}`}>Illustrative scenarios shown for a demo build.</p>
+    </section>
+  );
+}
+
+/* ---------------------------------------------------------------- FAQ ---- */
+const FAQS = [
+  ['What exactly does TransitOps manage?', 'The full fleet lifecycle: a vehicle and driver registry, trip creation and dispatch, maintenance, fuel and expense logging, plus a dashboard and reports for KPIs, cost and ROI.'],
+  ['What are the “business rules” it enforces?', 'Unique registration numbers, retired/in-shop vehicles kept out of dispatch, expired-license and suspended drivers blocked, no double-booking, and cargo never exceeding vehicle capacity — all enforced server-side.'],
+  ['How does role-based access work?', 'There are four roles — Fleet Manager, Dispatcher, Safety Officer and Financial Analyst. Each logs in and sees a scoped set of pages and actions, gated on the server, not just hidden in the UI.'],
+  ['What happens when a trip is dispatched?', 'The vehicle and driver both flip to “On trip”. Completing the trip returns them to “Available” and records the final odometer and fuel used; cancelling a dispatched trip restores them too.'],
+  ['Can I get the data out?', 'Yes. The reports page computes fuel efficiency, operational cost, utilization and vehicle ROI, and exports the full table to CSV in one click.'],
+];
+
+function Faq() {
+  const [open, setOpen] = useState(0);
+  return (
+    <section id="faq" className={`border-y ${LINE} ${CARD}`}>
+      <div className="max-w-3xl mx-auto px-6 py-24">
+        <h2 className="font-display text-[clamp(2rem,4.5vw,3rem)] leading-[1.03] tracking-[-0.02em] mb-10">FAQs</h2>
+        <div className={`border-t ${LINE}`}>
+          {FAQS.map(([q, a], i) => {
             const isOpen = open === i;
             return (
-              <button
-                key={r.t}
-                onClick={() => setOpen(isOpen ? -1 : i)}
-                className="w-full text-left py-5 flex gap-4 group"
-              >
-                <span className="mt-0.5 text-brand shrink-0">
-                  {isOpen ? <Minus size={18} /> : <Plus size={18} />}
-                </span>
-                <span className="flex-1">
-                  <span className="block font-medium group-hover:text-brand transition-colors">
-                    {r.t}
-                  </span>
-                  {isOpen && <span className="block mt-2 text-sm text-muted leading-relaxed">{r.d}</span>}
-                </span>
-              </button>
+              <div key={q} className={`border-b ${LINE}`}>
+                <button onClick={() => setOpen(isOpen ? -1 : i)} className="w-full text-left py-5 flex items-center gap-4">
+                  <span className="text-[#2775CA] shrink-0">{isOpen ? <Minus size={18} /> : <Plus size={18} />}</span>
+                  <span className="flex-1 font-medium">{q}</span>
+                </button>
+                {isOpen && <p className={`pb-6 pl-10 -mt-1 text-sm ${MUTED} leading-relaxed max-w-2xl`}>{a}</p>}
+              </div>
             );
           })}
         </div>
@@ -273,56 +458,57 @@ function RulesSection() {
   );
 }
 
-function RolesSection() {
+/* ------------------------------------------------------------- Footer ---- */
+function Footer() {
+  const cols = [
+    ['Product', ['Platform', 'Rules engine', 'Roles', 'Reports']],
+    ['Roles', ['Fleet Manager', 'Dispatcher', 'Safety Officer', 'Financial Analyst']],
+    ['Resources', ['FAQ', 'Get started', 'Documentation', 'Changelog']],
+    ['Company', ['About', 'Careers', 'Privacy', 'Terms']],
+  ];
   return (
-    <section id="roles" className="max-w-content mx-auto px-6 py-24">
-      <div className="max-w-2xl mb-14">
-        <p className="eyebrow mb-4">Role-based access</p>
-        <h2 className="display text-[clamp(2rem,4.5vw,3.2rem)] leading-[1.02]">
-          Everyone sees exactly their lane.
-        </h2>
+    <footer className={CANVAS}>
+      {/* CTA */}
+      <div className="max-w-6xl mx-auto px-6 pt-24">
+        <div className="rounded-3xl bg-[#1A1815] text-[#F5F1E9] px-8 py-16 text-center relative overflow-hidden">
+          <h2 className="font-display text-[clamp(2rem,5vw,3.4rem)] leading-[1.03] tracking-[-0.02em] max-w-2xl mx-auto">
+            Put the whole fleet on rails.
+          </h2>
+          <p className="mt-4 text-[#C9C2B4] max-w-lg mx-auto">Register a vehicle, add a driver, and dispatch your first rule-checked trip in minutes.</p>
+          <div className="mt-8 flex justify-center">
+            <Link to="/login" className="inline-flex items-center gap-2 rounded-full bg-[#F5F1E9] text-[#1A1815] text-sm font-medium px-6 py-3 hover:bg-white transition-colors">
+              Get started <ArrowRight size={16} />
+            </Link>
+          </div>
+        </div>
       </div>
-      <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        {ROLES.map((r) => (
-          <div key={r.name} className="border border-hairline rounded-card p-6 hover:border-brand/40 transition-colors">
-            <div className="w-10 h-10 grid place-items-center rounded-lg bg-navy text-white">
-              <r.icon size={18} />
-            </div>
-            <h3 className="mt-5 font-semibold tracking-tight">{r.name}</h3>
-            <p className="mt-2 text-sm text-muted leading-relaxed">{r.d}</p>
+
+      {/* Links */}
+      <div className="max-w-6xl mx-auto px-6 py-16 grid grid-cols-2 md:grid-cols-5 gap-10">
+        <div className="col-span-2 md:col-span-1">
+          <img src="/logo.png" alt="TransitOps" className="h-7 w-auto"
+            onError={(e) => { e.currentTarget.style.display = 'none'; }} />
+          <p className={`mt-4 text-sm ${MUTED} leading-relaxed`}>Smart Transport Operations Platform.</p>
+        </div>
+        {cols.map(([h, items]) => (
+          <div key={h}>
+            <p className="text-xs font-medium tracking-[0.12em] uppercase text-[#8A837A] mb-4">{h}</p>
+            <ul className="space-y-2.5">
+              {items.map((it) => (
+                <li key={it}>
+                  <Link to="/login" className={`text-sm ${MUTED} hover:text-[#1A1815] transition-colors`}>{it}</Link>
+                </li>
+              ))}
+            </ul>
           </div>
         ))}
       </div>
-    </section>
-  );
-}
-
-function FooterCta() {
-  return (
-    <section className="bg-navy text-white">
-      <div className="max-w-content mx-auto px-6 py-24 text-center">
-        <p className="eyebrow text-white/50 mb-5">Ready when you are</p>
-        <h2 className="display text-[clamp(2.2rem,5vw,3.6rem)] leading-[1.03] max-w-2xl mx-auto">
-          Put the whole fleet on rails.
-        </h2>
-        <div className="mt-9 flex justify-center">
-          <Link
-            to="/login"
-            className="inline-flex items-center gap-2 bg-brand text-white text-sm font-medium px-6 py-3 rounded-control hover:bg-brand-dark transition-colors"
-          >
-            Get started <ArrowRight size={16} />
-          </Link>
-        </div>
-        <div className="mt-16 pt-8 border-t border-white/10 flex flex-col sm:flex-row items-center justify-between gap-4 text-sm text-white/50">
-          <div className="flex items-center gap-2">
-            <span className="grid place-items-center w-6 h-6 rounded bg-brand text-white">
-              <Bus size={13} />
-            </span>
-            TransitOps
-          </div>
-          <span>Smart Transport Operations Platform</span>
+      <div className={`border-t ${LINE}`}>
+        <div className={`max-w-6xl mx-auto px-6 py-6 flex flex-col sm:flex-row items-center justify-between gap-3 text-sm ${MUTED}`}>
+          <div className="flex items-center gap-2"><LogoMark size={20} /> © {new Date().getFullYear()} TransitOps</div>
+          <span>Built for the TransitOps hackathon.</span>
         </div>
       </div>
-    </section>
+    </footer>
   );
 }

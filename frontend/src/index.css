@@ -4,6 +4,26 @@
 
 :root {
   color-scheme: light;
+  --bg: 245 241 233; /* warm ivory canvas */
+  --surface: 253 251 246; /* warm card white */
+  --hairline: 231 224 210; /* warm hairline */
+  --ink: 26 24 21;
+  --muted: 107 101 96;
+  --navy: 26 24 21; /* warm near-black for dark bands / CTA panels */
+  --navy-soft: 51 48 42;
+  --brand-soft: 234 241 251;
+}
+
+.dark {
+  color-scheme: dark;
+  --bg: 7 9 13;
+  --surface: 17 20 27;
+  --hairline: 34 39 51;
+  --ink: 237 240 245;
+  --muted: 148 157 176;
+  --navy: 4 6 11;
+  --navy-soft: 11 15 24;
+  --brand-soft: 30 40 61;
 }
 
 html {
@@ -28,7 +48,7 @@ body {
     font-weight: 600;
     text-transform: uppercase;
     letter-spacing: 0.18em;
-    color: #6b7280;
+    color: rgb(var(--muted));
   }
   .display {
     font-family: 'Fraunces', Georgia, Cambria, 'Times New Roman', serif;
@@ -43,14 +63,20 @@ body {
   height: 10px;
 }
 ::-webkit-scrollbar-thumb {
-  background: #d7dae1;
+  background: rgb(var(--hairline));
   border-radius: 999px;
 }
 
 /* subtle grid backdrop used on the landing hero */
 .grid-lines {
   background-image:
-    linear-gradient(to right, rgba(11, 18, 32, 0.05) 1px, transparent 1px),
-    linear-gradient(to bottom, rgba(11, 18, 32, 0.05) 1px, transparent 1px);
+    linear-gradient(to right, rgb(var(--ink) / 0.05) 1px, transparent 1px),
+    linear-gradient(to bottom, rgb(var(--ink) / 0.05) 1px, transparent 1px);
   background-size: 44px 44px;
+}
+
+.dark .grid-lines {
+  background-image:
+    linear-gradient(to right, rgb(255 255 255 / 0.06) 1px, transparent 1px),
+    linear-gradient(to bottom, rgb(255 255 255 / 0.06) 1px, transparent 1px);
 }

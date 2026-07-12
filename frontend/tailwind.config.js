@@ -6,20 +6,20 @@ export default {
     extend: {
       colors: {
         brand: {
-          DEFAULT: '#2775CA', // USDC blue
-          soft: '#E6F1FB',
+          DEFAULT: '#2775CA',
+          soft: 'rgb(var(--brand-soft) / <alpha-value>)',
           dark: '#1E5EA8',
         },
-        // deep navy full-bleed band (fintech-trustworthy)
+        // deep navy full-bleed band — goes near-black in dark mode
         navy: {
-          DEFAULT: '#0A1E3F',
-          soft: '#0E2A54',
+          DEFAULT: 'rgb(var(--navy) / <alpha-value>)',
+          soft: 'rgb(var(--navy-soft) / <alpha-value>)',
         },
-        bg: '#F7F8FA',
-        surface: '#FFFFFF',
-        hairline: '#E4E7EC',
-        ink: '#0B1220',
-        muted: '#6B7280',
+        bg: 'rgb(var(--bg) / <alpha-value>)',
+        surface: 'rgb(var(--surface) / <alpha-value>)',
+        hairline: 'rgb(var(--hairline) / <alpha-value>)',
+        ink: 'rgb(var(--ink) / <alpha-value>)',
+        muted: 'rgb(var(--muted) / <alpha-value>)',
       },
       borderRadius: {
         card: '10px',

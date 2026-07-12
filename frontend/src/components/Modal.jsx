@@ -36,7 +36,7 @@ export function Field({ label, children, hint }) {
 }
 
 const inputCls =
-  'w-full rounded-control border border-hairline bg-white px-3 py-2 text-sm text-ink outline-none focus:border-brand focus:ring-1 focus:ring-brand';
+  'w-full rounded-control border border-hairline bg-surface px-3 py-2 text-sm text-ink outline-none focus:border-brand focus:ring-1 focus:ring-brand';
 
 export function Input(props) {
   return <input className={inputCls} {...props} />;

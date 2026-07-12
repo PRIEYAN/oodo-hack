@@ -1,7 +1,8 @@
 import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import { Bus, ArrowRight, ArrowLeft, ShieldCheck } from 'lucide-react';
+import { ArrowRight, ArrowLeft, ShieldCheck } from 'lucide-react';
 import { useAuth } from '../context/AuthContext.jsx';
+import { LogoMark, RouteWatermark } from '../components/Logo.jsx';
 
 const DEMO = [
   { role: 'Fleet Manager', email: 'manager@transitops.dev' },
@@ -11,7 +12,7 @@ const DEMO = [
 ];
 
 const inputCls =
-  'w-full rounded-control border border-hairline bg-white px-3.5 py-2.5 text-sm text-ink outline-none focus:border-brand focus:ring-1 focus:ring-brand transition';
+  'w-full rounded-control border border-hairline bg-surface px-3.5 py-2.5 text-sm text-ink outline-none focus:border-brand focus:ring-1 focus:ring-brand transition';
 
 export default function Login() {
   const { login } = useAuth();
@@ -40,18 +41,17 @@ export default function Login() {
       {/* Left brand panel */}
       <div className="relative hidden lg:flex flex-col justify-between bg-navy text-white p-12 overflow-hidden">
         <div className="absolute inset-0 grid-lines opacity-[0.08]" />
+        <RouteWatermark className="absolute -right-16 -bottom-16 w-[420px] h-[420px] text-brand/25" />
         <Link to="/" className="relative flex items-center gap-2">
-          <span className="grid place-items-center w-8 h-8 rounded-md bg-brand text-white">
-            <Bus size={17} />
-          </span>
+          <LogoMark size={30} />
           <span className="font-semibold tracking-tight">TransitOps</span>
         </Link>
         <div className="relative">
           <p className="eyebrow text-white/50 mb-5">Smart transport operations</p>
-          <h1 className="display text-[clamp(2.2rem,4vw,3.2rem)] leading-[1.02]">
-            Run the fleet.
+          <h1 className="display text-[clamp(2.2rem,4vw,3.2rem)] leading-[1.04]">
+            Your control center
             <br />
-            Break <span className="text-brand italic">no</span> rules.
+            for the <span className="text-brand italic">whole</span> fleet.
           </h1>
           <p className="mt-5 text-white/60 max-w-sm leading-relaxed">
             Every operating rule enforced server-side, so bad data becomes impossible.
@@ -87,7 +87,7 @@ export default function Login() {
             <button
               type="submit"
               disabled={busy}
-              className="w-full inline-flex items-center justify-center gap-2 bg-brand text-white text-sm font-medium px-4 py-2.5 rounded-control hover:bg-brand-dark disabled:opacity-50 transition-colors"
+              className="w-full inline-flex items-center justify-center gap-2 bg-ink text-surface text-sm font-medium px-4 py-2.5 rounded-full hover:opacity-90 disabled:opacity-50 transition-opacity"
             >
               {busy ? 'Signing in…' : 'Sign in'} {!busy && <ArrowRight size={15} />}
             </button>

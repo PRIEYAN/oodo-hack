@@ -6,9 +6,9 @@ export function Button({ variant = 'primary', size = 'md', className = '', ...pr
     'inline-flex items-center justify-center gap-2 rounded-control font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed';
   const variants = {
     primary: 'bg-brand text-white hover:bg-brand-dark',
-    secondary: 'bg-white text-ink border border-hairline hover:bg-bg',
+    secondary: 'bg-surface text-ink border border-hairline hover:bg-bg',
     ghost: 'text-muted hover:text-ink hover:bg-bg',
-    danger: 'bg-red-50 text-red-600 border border-red-200 hover:bg-red-100',
+    danger: 'bg-red-50 text-red-600 border border-red-200 hover:bg-red-100 dark:bg-red-950/40 dark:text-red-400 dark:border-red-900',
   };
   const sizes = { sm: 'text-xs px-2.5 py-1.5', md: 'text-sm px-3.5 py-2' };
   return <button className={`${base} ${variants[variant]} ${sizes[size]} ${className}`} {...props} />;
@@ -41,23 +41,23 @@ export function StatCard({ label, value, sub, icon: Icon, accent }) {
 
 // --- StatusPill ---
 const PILL_STYLES = {
-  available: 'bg-emerald-50 text-emerald-700',
-  on_trip: 'bg-emerald-50 text-emerald-700',
-  dispatched: 'bg-amber-50 text-amber-700',
-  in_shop: 'bg-amber-50 text-amber-700',
-  open: 'bg-amber-50 text-amber-700',
-  draft: 'bg-brand-soft text-brand-dark',
-  completed: 'bg-brand-soft text-brand-dark',
-  closed: 'bg-slate-100 text-slate-600',
-  expired: 'bg-red-50 text-red-600',
-  suspended: 'bg-red-50 text-red-600',
-  cancelled: 'bg-red-50 text-red-600',
-  retired: 'bg-stone-100 text-stone-600',
-  off_duty: 'bg-stone-100 text-stone-600',
+  available: 'bg-emerald-50 text-emerald-700 dark:bg-emerald-950/40 dark:text-emerald-400',
+  on_trip: 'bg-emerald-50 text-emerald-700 dark:bg-emerald-950/40 dark:text-emerald-400',
+  dispatched: 'bg-amber-50 text-amber-700 dark:bg-amber-950/40 dark:text-amber-400',
+  in_shop: 'bg-amber-50 text-amber-700 dark:bg-amber-950/40 dark:text-amber-400',
+  open: 'bg-amber-50 text-amber-700 dark:bg-amber-950/40 dark:text-amber-400',
+  draft: 'bg-brand-soft text-brand-dark dark:text-brand',
+  completed: 'bg-brand-soft text-brand-dark dark:text-brand',
+  closed: 'bg-stone-100 text-stone-600 dark:bg-stone-800 dark:text-stone-300',
+  expired: 'bg-red-50 text-red-600 dark:bg-red-950/40 dark:text-red-400',
+  suspended: 'bg-red-50 text-red-600 dark:bg-red-950/40 dark:text-red-400',
+  cancelled: 'bg-red-50 text-red-600 dark:bg-red-950/40 dark:text-red-400',
+  retired: 'bg-stone-100 text-stone-600 dark:bg-stone-800 dark:text-stone-300',
+  off_duty: 'bg-stone-100 text-stone-600 dark:bg-stone-800 dark:text-stone-300',
 };
 
 export function StatusPill({ status }) {
-  const cls = PILL_STYLES[status] || 'bg-slate-100 text-slate-600';
+  const cls = PILL_STYLES[status] || 'bg-stone-100 text-stone-600 dark:bg-stone-800 dark:text-stone-300';
   return (
     <span className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium ${cls}`}>
       {fmtLabel(status)}

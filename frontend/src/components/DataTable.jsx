@@ -49,7 +49,7 @@ export function DataTable({ columns, rows, searchable = true, searchKeys, emptyM
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             placeholder="Search…"
-            className="w-full rounded-control border border-hairline bg-white pl-9 pr-3 py-2 text-sm outline-none focus:border-brand"
+            className="w-full rounded-control border border-hairline bg-surface pl-9 pr-3 py-2 text-sm outline-none focus:border-brand"
           />
         </div>
       )}
