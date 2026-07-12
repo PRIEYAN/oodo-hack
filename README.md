@@ -1,5 +1,9 @@
 # TransitOps — Smart Transport Operations Platform
 
+> Empowering Business through Smart Transportation Automation System
+
+![TransitOps logo](./images/logo.png)
+
 **Digitize fleet operations. Enforce the rules automatically.**
 
 TransitOps is a full-stack logistics operations platform that centralizes vehicles, drivers, trip dispatch, maintenance, fuel & expenses, and analytics in one web app. Every critical business rule is enforced **on the server**, so invalid fleet state (double-booking, overload, expired licenses, in-shop vehicles on the road) cannot be saved.
