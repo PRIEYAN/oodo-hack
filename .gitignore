@@ -4,4 +4,4 @@ dist/
 .mongo-data/
 .claude 
 plan.md
-.Ds_Store
+.DS_Store
