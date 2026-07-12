@@ -101,7 +101,7 @@ export default function Dashboard() {
             <Card className="p-5">
               <h3 className="text-sm font-medium text-ink mb-3">Utilization</h3>
               <div className="flex flex-col items-center justify-center h-[260px]">
-                <div className="text-5xl font-bold text-brand">{percent(kpis.fleetUtilization)}</div>
+                <div className="font-display text-6xl text-brand tracking-tight">{percent(kpis.fleetUtilization)}</div>
                 <p className="text-sm text-muted mt-2">of non-retired vehicles currently on a trip</p>
                 <div className="w-full max-w-xs mt-6 h-2.5 rounded-full bg-hairline overflow-hidden">
                   <div className="h-full bg-brand rounded-full transition-all"

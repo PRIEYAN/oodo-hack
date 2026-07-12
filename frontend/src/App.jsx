@@ -2,6 +2,7 @@ import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider, useAuth } from './context/AuthContext.jsx';
 import { ToastProvider } from './context/ToastContext.jsx';
 import Layout from './components/Layout.jsx';
+import Landing from './pages/Landing.jsx';
 import Login from './pages/Login.jsx';
 import Dashboard from './pages/Dashboard.jsx';
 import Vehicles from './pages/Vehicles.jsx';
@@ -24,8 +25,9 @@ export default function App() {
       <ToastProvider>
         <BrowserRouter>
           <Routes>
+            <Route path="/" element={<Landing />} />
             <Route path="/login" element={<Login />} />
-            <Route path="/" element={<Protected><Dashboard /></Protected>} />
+            <Route path="/dashboard" element={<Protected><Dashboard /></Protected>} />
             <Route path="/vehicles" element={<Protected><Vehicles /></Protected>} />
             <Route path="/drivers" element={<Protected><Drivers /></Protected>} />
             <Route path="/trips" element={<Protected><Trips /></Protected>} />

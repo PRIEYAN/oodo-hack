@@ -14,7 +14,7 @@ import { useAuth } from '../context/AuthContext.jsx';
 import { ROLE_LABELS, NAV_FOR_ROLE } from '../lib/rbac.js';
 
 const NAV = [
-  { key: 'dashboard', to: '/', label: 'Dashboard', icon: LayoutDashboard, end: true },
+  { key: 'dashboard', to: '/dashboard', label: 'Dashboard', icon: LayoutDashboard, end: true },
   { key: 'vehicles', to: '/vehicles', label: 'Vehicles', icon: Truck },
   { key: 'drivers', to: '/drivers', label: 'Drivers', icon: Users },
   { key: 'trips', to: '/trips', label: 'Trips', icon: Route },

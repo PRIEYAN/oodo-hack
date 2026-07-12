@@ -1,9 +1,7 @@
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { Bus } from 'lucide-react';
+import { useNavigate, Link } from 'react-router-dom';
+import { Bus, ArrowRight, ArrowLeft, ShieldCheck } from 'lucide-react';
 import { useAuth } from '../context/AuthContext.jsx';
-import { Button, Card } from '../components/ui.jsx';
-import { Field, Input } from '../components/Modal.jsx';
 
 const DEMO = [
   { role: 'Fleet Manager', email: 'manager@transitops.dev' },
@@ -11,6 +9,9 @@ const DEMO = [
   { role: 'Safety Officer', email: 'safety@transitops.dev' },
   { role: 'Financial Analyst', email: 'finance@transitops.dev' },
 ];
+
+const inputCls =
+  'w-full rounded-control border border-hairline bg-white px-3.5 py-2.5 text-sm text-ink outline-none focus:border-brand focus:ring-1 focus:ring-brand transition';
 
 export default function Login() {
   const { login } = useAuth();
@@ -26,7 +27,7 @@ export default function Login() {
     setError('');
     try {
       await login(email, password);
-      navigate('/');
+      navigate('/dashboard');
     } catch (err) {
       setError(err.message);
     } finally {
@@ -35,50 +36,82 @@ export default function Login() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-bg p-4">
-      <div className="w-full max-w-sm">
-        <div className="flex items-center justify-center gap-2 mb-6">
-          <span className="p-2 rounded-control bg-brand text-white">
-            <Bus size={22} />
+    <div className="min-h-screen grid lg:grid-cols-2">
+      {/* Left brand panel */}
+      <div className="relative hidden lg:flex flex-col justify-between bg-navy text-white p-12 overflow-hidden">
+        <div className="absolute inset-0 grid-lines opacity-[0.08]" />
+        <Link to="/" className="relative flex items-center gap-2">
+          <span className="grid place-items-center w-8 h-8 rounded-md bg-brand text-white">
+            <Bus size={17} />
           </span>
-          <span className="text-xl font-semibold text-ink">TransitOps</span>
+          <span className="font-semibold tracking-tight">TransitOps</span>
+        </Link>
+        <div className="relative">
+          <p className="eyebrow text-white/50 mb-5">Smart transport operations</p>
+          <h1 className="display text-[clamp(2.2rem,4vw,3.2rem)] leading-[1.02]">
+            Run the fleet.
+            <br />
+            Break <span className="text-brand italic">no</span> rules.
+          </h1>
+          <p className="mt-5 text-white/60 max-w-sm leading-relaxed">
+            Every operating rule enforced server-side, so bad data becomes impossible.
+          </p>
         </div>
-        <Card className="p-6">
-          <h1 className="text-lg font-semibold text-ink mb-1">Sign in</h1>
-          <p className="text-sm text-muted mb-5">Smart transport operations platform</p>
-          <form onSubmit={submit}>
-            <Field label="Email">
-              <Input type="email" value={email} onChange={(e) => setEmail(e.target.value)} required />
-            </Field>
-            <Field label="Password">
-              <Input
-                type="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                required
-              />
-            </Field>
-            {error && <p className="text-sm text-red-600 mb-3">{error}</p>}
-            <Button type="submit" disabled={busy} className="w-full">
-              {busy ? 'Signing in…' : 'Sign in'}
-            </Button>
+        <div className="relative flex items-center gap-2 text-sm text-white/50">
+          <ShieldCheck size={15} className="text-brand" />
+          Four roles · RBAC · full trip lifecycle
+        </div>
+      </div>
+
+      {/* Right form panel */}
+      <div className="flex flex-col justify-center px-6 py-12 sm:px-12">
+        <div className="w-full max-w-sm mx-auto">
+          <Link to="/" className="inline-flex items-center gap-1.5 text-sm text-muted hover:text-ink mb-8 transition-colors">
+            <ArrowLeft size={15} /> Back to home
+          </Link>
+
+          <p className="eyebrow mb-3">Welcome back</p>
+          <h2 className="display text-3xl mb-1">Sign in</h2>
+          <p className="text-sm text-muted mb-8">Access your operations workspace.</p>
+
+          <form onSubmit={submit} className="space-y-4">
+            <label className="block">
+              <span className="block text-sm font-medium mb-1.5">Email</span>
+              <input type="email" className={inputCls} value={email} onChange={(e) => setEmail(e.target.value)} required />
+            </label>
+            <label className="block">
+              <span className="block text-sm font-medium mb-1.5">Password</span>
+              <input type="password" className={inputCls} value={password} onChange={(e) => setPassword(e.target.value)} required />
+            </label>
+            {error && <p className="text-sm text-red-600">{error}</p>}
+            <button
+              type="submit"
+              disabled={busy}
+              className="w-full inline-flex items-center justify-center gap-2 bg-brand text-white text-sm font-medium px-4 py-2.5 rounded-control hover:bg-brand-dark disabled:opacity-50 transition-colors"
+            >
+              {busy ? 'Signing in…' : 'Sign in'} {!busy && <ArrowRight size={15} />}
+            </button>
           </form>
-        </Card>
-        <Card className="mt-4 p-4">
-          <p className="text-xs font-medium text-muted mb-2">Demo accounts (password: password123)</p>
-          <div className="grid grid-cols-2 gap-2">
-            {DEMO.map((d) => (
-              <button
-                key={d.email}
-                onClick={() => setEmail(d.email)}
-                className="text-left rounded-control border border-hairline px-2.5 py-1.5 hover:bg-bg"
-              >
-                <span className="block text-xs font-medium text-ink">{d.role}</span>
-                <span className="block text-[11px] text-muted truncate">{d.email}</span>
-              </button>
-            ))}
+
+          <div className="mt-8">
+            <p className="eyebrow mb-3">Demo accounts · password123</p>
+            <div className="grid grid-cols-2 gap-2">
+              {DEMO.map((d) => (
+                <button
+                  key={d.email}
+                  type="button"
+                  onClick={() => setEmail(d.email)}
+                  className={`text-left rounded-control border px-3 py-2 transition-colors ${
+                    email === d.email ? 'border-brand bg-brand-soft' : 'border-hairline hover:bg-bg'
+                  }`}
+                >
+                  <span className="block text-xs font-medium text-ink">{d.role}</span>
+                  <span className="block text-[11px] text-muted truncate">{d.email}</span>
+                </button>
+              ))}
+            </div>
           </div>
-        </Card>
+        </div>
       </div>
     </div>
   );

@@ -24,17 +24,17 @@ export function Card({ className = '', children }) {
 // --- StatCard ---
 export function StatCard({ label, value, sub, icon: Icon, accent }) {
   return (
-    <Card className="p-4">
-      <div className="flex items-start justify-between">
-        <p className="text-sm text-muted">{label}</p>
+    <Card className="p-5 hover:border-brand/30 transition-colors">
+      <div className="flex items-center justify-between">
+        <p className="text-[11px] uppercase tracking-eyebrow font-semibold text-muted">{label}</p>
         {Icon && (
           <span className={`p-1.5 rounded-control ${accent || 'bg-brand-soft text-brand'}`}>
-            <Icon size={16} />
+            <Icon size={15} />
           </span>
         )}
       </div>
-      <p className="mt-2 text-3xl font-bold tracking-tight text-ink">{value}</p>
-      {sub && <p className="mt-1 text-xs text-muted">{sub}</p>}
+      <p className="mt-3 font-display text-4xl leading-none tracking-tight text-ink">{value}</p>
+      {sub && <p className="mt-2 text-xs text-muted">{sub}</p>}
     </Card>
   );
 }
@@ -68,10 +68,10 @@ export function StatusPill({ status }) {
 // --- Section header ---
 export function PageHeader({ title, subtitle, children }) {
   return (
-    <div className="flex flex-wrap items-center justify-between gap-3 mb-5">
+    <div className="flex flex-wrap items-center justify-between gap-3 mb-6">
       <div>
-        <h1 className="text-xl font-semibold text-ink">{title}</h1>
-        {subtitle && <p className="text-sm text-muted mt-0.5">{subtitle}</p>}
+        <h1 className="font-display text-3xl tracking-tight text-ink">{title}</h1>
+        {subtitle && <p className="text-sm text-muted mt-1">{subtitle}</p>}
       </div>
       <div className="flex items-center gap-2">{children}</div>
     </div>
