@@ -4,6 +4,8 @@
 // Swap `mark` for an <img src="/logo.svg" /> once you drop your Canva export in
 // frontend/public/logo.svg.
 
+import logoUrl from '../assets/logo.png';
+
 export function LogoMark({ size = 30, className = '' }) {
   return (
     <svg
@@ -41,14 +43,14 @@ export function LogoMark({ size = 30, className = '' }) {
 }
 
 export function Logo({ compact = false }) {
-  // Full horizontal lockup exported from Canva (public/logo.png).
+  // Full horizontal lockup exported from Canva (src/assets/logo.png).
   // Falls back to the inline mark + wordmark if the image is missing.
   if (compact) return <LogoMark />;
   return (
     <img
-      src="/logo.png"
+      src={logoUrl}
       alt="TransitOps"
-      className="h-8 w-auto"
+      className="h-10 w-auto bg-transparent"
       onError={(e) => {
         e.currentTarget.style.display = 'none';
       }}

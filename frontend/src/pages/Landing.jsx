@@ -16,6 +16,7 @@ import {
   MapPin,
 } from 'lucide-react';
 import { LogoMark } from '../components/Logo.jsx';
+import logoUrl from '../assets/logo.png';
 
 /*
   Landing page styled after claude.com/product/claude-science:
@@ -65,7 +66,7 @@ function Nav() {
     <header className={`sticky top-0 z-40 ${CANVAS}/85 backdrop-blur border-b ${LINE}`}>
       <div className="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
         <a href="#top" className="flex items-center">
-          <img src="/logo.png" alt="TransitOps" className="h-7 w-auto"
+          <img src={logoUrl} alt="TransitOps" className="h-9 w-auto bg-transparent"
             onError={(e) => { e.currentTarget.style.display = 'none'; }} />
         </a>
         <nav className={`hidden md:flex items-center gap-8 text-sm ${MUTED}`}>
@@ -486,7 +487,7 @@ function Footer() {
       {/* Links */}
       <div className="max-w-6xl mx-auto px-6 py-16 grid grid-cols-2 md:grid-cols-5 gap-10">
         <div className="col-span-2 md:col-span-1">
-          <img src="/logo.png" alt="TransitOps" className="h-7 w-auto"
+          <img src={logoUrl} alt="TransitOps" className="h-9 w-auto bg-transparent"
             onError={(e) => { e.currentTarget.style.display = 'none'; }} />
           <p className={`mt-4 text-sm ${MUTED} leading-relaxed`}>Smart Transport Operations Platform.</p>
         </div>
